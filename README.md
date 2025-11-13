@@ -13,6 +13,13 @@ The Org is a sophisticated multi-agent system built using the ElizaOS framework.
     *   **Ruby (Community Liaison)**: Facilitates cross-community knowledge sharing and identifies synergies.
     *   **Jimmy (Project Manager)**: Coordinates projects, tracks progress, and manages team check-ins.
     *   **Laura (Social Media Manager)**: Crafts and publishes content across social media platforms.
+*   **Multi-Tenant Org2Org Multiplex IoT Android BotNet Distributed Cognitive Architecture**:
+    *   **ASI Integration Layer**: Android System Intelligence-inspired distributed cognitive processing
+    *   **BotNet Coordination**: Distributed bot node management with task distribution
+    *   **IoT Sensor Fusion**: Real-time Android sensor data processing and context awareness
+    *   **Org2Org Multiplex**: Multi-organization communication routing and broadcasting
+    *   **Memory Surface**: Persistent distributed cognition with recursive memory indexing
+    *   **Session Management**: Cross-platform session handoff and synchronization
 *   **Multi-Platform Integration**: Seamlessly interacts with Discord, Telegram, and Twitter.
 *   **Persistent Memory & State**: Utilizes SQL (via `@elizaos/plugin-sql`) for robust data storage.
 *   **Advanced LLM Integration**: Supports models from OpenAI, Anthropic, and local AI setups.
@@ -185,9 +192,32 @@ the-org/
 │   │   ├── assets/
 │   │   ├── index.ts
 │   │   └── spec.md
+│   ├── asi/                     # ASI Integration Layer (Multi-Tenant Distributed Architecture)
+│   │   ├── cognitive/           # Cognitive processing and BotNet coordination
+│   │   │   ├── processor.ts     # Cognitive context processing pipeline
+│   │   │   ├── botnet.ts        # Distributed bot node coordination
+│   │   │   └── index.ts
+│   │   ├── iot/                 # IoT sensor fusion
+│   │   │   ├── sensorFusion.ts  # Android sensor data processing
+│   │   │   └── index.ts
+│   │   ├── multiplex/           # Org2org communication routing
+│   │   │   ├── router.ts        # Multi-organization message routing
+│   │   │   └── index.ts
+│   │   ├── memory/              # Distributed memory surface
+│   │   │   ├── surface.ts       # Persistent memory fragment management
+│   │   │   └── index.ts
+│   │   ├── session/             # Cross-platform session management
+│   │   │   ├── manager.ts       # Session handoff and synchronization
+│   │   │   └── index.ts
+│   │   ├── types.ts             # Type definitions for ASI system
+│   │   ├── index.ts             # Main ASI system orchestrator
+│   │   └── README.md            # ASI system documentation
 │   ├── init.ts                  # Common character initialization logic for agents
 │   ├── index.ts                 # Main entry point, aggregates and exports all agents
 │   └── plugins.test.ts          # Vitest tests for ElizaOS plugins
+├── tests/                       # Test suites
+│   ├── asi.test.ts              # ASI system integration tests
+│   └── ...                      # Other agent tests
 ├── .env                         # Environment variables (create this file)
 ├── bun.lockb                    # Bun lockfile
 ├── package.json                 # Project dependencies and scripts
@@ -216,6 +246,47 @@ the-org/
     *   Handles social media communications across Discord and Twitter. Crafts and posts approved content, manages media assets, and ensures brand consistency.
     *   Configured in `src/socialMediaManager/`.
 
+## ASI Distributed Cognitive Architecture
+
+The **ASI (Android System Intelligence) Integration Layer** provides a comprehensive distributed cognitive architecture for multi-tenant, multi-organization coordination. See [src/asi/README.md](src/asi/README.md) for detailed documentation.
+
+### Key Capabilities
+
+*   **Multi-Tenant Org2Org Communication**: Multiplexed routing between organizations with channel management
+*   **Distributed BotNet Coordination**: Node registration, heartbeat monitoring, and intelligent task distribution
+*   **IoT Sensor Fusion**: Real-time Android sensor data processing (accelerometer, gyroscope, proximity, location, etc.)
+*   **Persistent Memory Surface**: Recursive memory indexing with cross-platform conversation tracking
+*   **Session Management**: Cross-platform session handoff with token-based authentication
+*   **Event-Driven Architecture**: Real-time event system for monitoring and integration
+
+### Quick Start
+
+```typescript
+import ASISystem from './src/asi';
+
+// Initialize ASI system
+const asi = new ASISystem();
+
+// Register organization
+asi.registerOrganization({
+  orgId: 'org-1',
+  name: 'My Organization',
+  tenantId: 'tenant-1',
+  metadata: {},
+});
+
+// Process IoT sensor data
+const result = await asi.processSensorData({
+  deviceId: 'device-1',
+  sensorType: 'accelerometer',
+  timestamp: Date.now(),
+  values: [10, 5, 2],
+});
+
+// Get system statistics
+console.log(asi.getSystemStats());
+```
+
 ## Testing
 
 The project uses [Vitest](https://vitest.dev/) for unit and integration testing.
@@ -232,6 +303,11 @@ The project uses [Vitest](https://vitest.dev/) for unit and integration testing.
     (Replace with the path to the test file you want to run).
 
 *   **Plugin Tests**: `src/plugins.test.ts` contains tests specifically for the ElizaOS plugins used within the project.
+
+*   **Run ASI system tests:**
+    ```bash
+    npm run test:asi
+    ```
 
 ### Load Testing
 

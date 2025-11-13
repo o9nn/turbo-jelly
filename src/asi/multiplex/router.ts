@@ -4,18 +4,40 @@
  */
 
 import { MultiplexChannel, OrganizationContext, DistributedTask } from '../types';
-import { EventEmitter } from 'events';
 
-export class MultiplexRouter extends EventEmitter {
+type EventCallback = (...args: any[]) => void;
+
+export class MultiplexRouter {
   private channels: Map<string, MultiplexChannel>;
   private organizations: Map<string, OrganizationContext>;
   private messageQueue: DistributedTask[];
+  private eventHandlers: Map<string, EventCallback[]>;
 
   constructor() {
-    super();
     this.channels = new Map();
     this.organizations = new Map();
     this.messageQueue = [];
+    this.eventHandlers = new Map();
+  }
+
+  /**
+   * Add event listener
+   */
+  on(event: string, callback: EventCallback): void {
+    if (!this.eventHandlers.has(event)) {
+      this.eventHandlers.set(event, []);
+    }
+    this.eventHandlers.get(event)!.push(callback);
+  }
+
+  /**
+   * Emit event
+   */
+  private emit(event: string, data: any): void {
+    const handlers = this.eventHandlers.get(event);
+    if (handlers) {
+      handlers.forEach(handler => handler(data));
+    }
   }
 
   /**

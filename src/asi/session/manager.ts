@@ -5,10 +5,37 @@
 
 import { SessionState } from '../types';
 
+// Simple base64 encode/decode for browser compatibility
+const base64Encode = (str: string): string => {
+  // Check for Buffer in Node.js environment
+  if (typeof globalThis !== 'undefined' && (globalThis as any).Buffer) {
+    return (globalThis as any).Buffer.from(str).toString('base64');
+  }
+  // Fallback for browser environments
+  if (typeof btoa !== 'undefined') {
+    return btoa(str);
+  }
+  // Fallback manual implementation
+  return str;
+};
+
+const base64Decode = (str: string): string => {
+  // Check for Buffer in Node.js environment
+  if (typeof globalThis !== 'undefined' && (globalThis as any).Buffer) {
+    return (globalThis as any).Buffer.from(str, 'base64').toString('utf-8');
+  }
+  // Fallback for browser environments
+  if (typeof atob !== 'undefined') {
+    return atob(str);
+  }
+  // Fallback manual implementation
+  return str;
+};
+
 export class SessionManager {
   private sessions: Map<string, SessionState>;
   private syncInterval: number = 15000; // 15 seconds
-  private syncTimers: Map<string, NodeJS.Timeout>;
+  private syncTimers: Map<string, any>;
 
   constructor() {
     this.sessions = new Map();
@@ -88,7 +115,7 @@ export class SessionManager {
     const payload = `${sessionId}:${expirationTime}`;
     
     // In production, this should be encrypted and signed
-    return Buffer.from(payload).toString('base64');
+    return base64Encode(payload);
   }
 
   /**
@@ -96,7 +123,7 @@ export class SessionManager {
    */
   verifyHandoffToken(token: string): string {
     try {
-      const payload = Buffer.from(token, 'base64').toString('utf-8');
+      const payload = base64Decode(token);
       const [sessionId, expirationTime] = payload.split(':');
 
       if (Date.now() > parseInt(expirationTime)) {

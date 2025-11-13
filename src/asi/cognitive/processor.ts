@@ -43,12 +43,18 @@ export class CognitiveProcessor {
    * Enrich context with additional metadata
    */
   private enrichContext(context: CognitiveContext): CognitiveContext {
+    // Get process ID if available (Node.js environment)
+    let processingNode = 0;
+    if (typeof globalThis !== 'undefined' && (globalThis as any).process?.pid) {
+      processingNode = (globalThis as any).process.pid;
+    }
+
     return {
       ...context,
       contextEnrichment: {
         ...context.contextEnrichment,
         timestamp: Date.now(),
-        processingNode: process.pid,
+        processingNode,
       },
     };
   }

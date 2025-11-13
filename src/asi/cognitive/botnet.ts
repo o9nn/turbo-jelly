@@ -4,19 +4,41 @@
  */
 
 import { BotNetNode, DistributedTask } from '../types';
-import { EventEmitter } from 'events';
 
-export class BotNetCoordinator extends EventEmitter {
+type EventCallback = (...args: any[]) => void;
+
+export class BotNetCoordinator {
   private nodes: Map<string, BotNetNode>;
   private tasks: Map<string, DistributedTask>;
   private heartbeatInterval: number = 30000; // 30 seconds
-  private heartbeatTimers: Map<string, NodeJS.Timeout>;
+  private heartbeatTimers: Map<string, any>;
+  private eventHandlers: Map<string, EventCallback[]>;
 
   constructor() {
-    super();
     this.nodes = new Map();
     this.tasks = new Map();
     this.heartbeatTimers = new Map();
+    this.eventHandlers = new Map();
+  }
+
+  /**
+   * Add event listener
+   */
+  on(event: string, callback: EventCallback): void {
+    if (!this.eventHandlers.has(event)) {
+      this.eventHandlers.set(event, []);
+    }
+    this.eventHandlers.get(event)!.push(callback);
+  }
+
+  /**
+   * Emit event
+   */
+  private emit(event: string, data: any): void {
+    const handlers = this.eventHandlers.get(event);
+    if (handlers) {
+      handlers.forEach(handler => handler(data));
+    }
   }
 
   /**
